@@ -101,7 +101,7 @@ namespace _08_Ukol_Eshop
             string userInput;
             do
             {
-                Console.WriteLine("******************");
+                Console.WriteLine("\n******************");
                 Console.WriteLine("*     E-SHOP     *");
                 Console.WriteLine("******************");
 
@@ -112,7 +112,7 @@ namespace _08_Ukol_Eshop
                 Console.WriteLine("5. Add new type of item");
                 Console.WriteLine("0. Quit program");
 
-                string[] validInput = new[] { "1", "2", "3", "4", "0" };
+                string[] validInput = new[] { "1", "2", "3", "4", "5", "0" };
                 Console.WriteLine("");
                 Console.Write("Your selection: ");
                 userInput = Console.ReadLine().Trim();
@@ -195,14 +195,8 @@ namespace _08_Ukol_Eshop
                         break;
 
                     case "5":
-                        Console.WriteLine("ADD NEW TYPE OF ITEM:");
-                        Console.WriteLine("Select of what type will be the added item:");
-                        Console.WriteLine("1. Shirt");
-                        Console.WriteLine("2. Trousers");
-                        Console.WriteLine("3. Footwear");
-                        Console.Write("Your selection: ");
-
-                        var userSelection = Console.ReadLine();
+                        Console.WriteLine("5 was selected");
+                        ShowAddItemOption();
                         break;
 
                     case "0":
@@ -307,10 +301,86 @@ namespace _08_Ukol_Eshop
             return totalRevenue;
         }
 
-        public void AddNewItem(int type)
+        public void ShowAddItemOption()
         {
-            Clothes.Clothes d = new Shirt()
+            Console.WriteLine("ADD NEW TYPE OF ITEM:");
+            Console.WriteLine("Select of what type will be the added item:");
+            Console.WriteLine("1. Shirt");
+            Console.WriteLine("2. Trousers");
+            Console.WriteLine("3. Footwear");
+            Console.Write("Your selection: ");
+            var userInput = Console.ReadLine().Trim();
+
+            while (String.IsNullOrEmpty(userInput) || (userInput != "1" && userInput != "2" && userInput != "3"))
+            {
+                Console.WriteLine("You have entered an invalid input. Please try again.");
+                Console.Write("Your selection: ");
+                userInput = Console.ReadLine().Trim();
+            }
+
+            switch (userInput)
+            {
+                case "1":
+                    AddNewShirt();
+                    break;
+                case "2":
+                    // logic
+                    break;
+                case "3":
+                    break;
+            }
         }
+        
+        public void AddNewShirt()
+        {
+            // POZN: toto dole by mi asi mohlo udeat bordel, kdyz bych mela u enums jinak definovane cislovani - VYRESIT!!!!
+            //var typeOfShirt = Enum.GetNames(typeof(Upperwear));
+            //for (int i = 0; i < typeOfShirt.Length; i++)
+            //{
+            //    Console.WriteLine($"{i} - {typeOfShirt[i]}");
+            //}
+
+            Console.WriteLine("What type of shirt do you want to add? (select number)");
+            var typesOfShirt = GetValuesInEnum<Upperwear>();
+            
+            Console.Write("Your selection:");
+            var inputShirt = Console.ReadLine().Trim();
+
+            var shirtType= UserInputCheck(typesOfShirt, inputShirt);
+
+            Console.WriteLine(shirtType);
+        }
+
+        protected string UserInputCheck(Dictionary<string, string> types, string userInput)
+        {
+            var verifiedInput = userInput;
+            
+            while (!types.ContainsKey(userInput))
+            {
+                Console.WriteLine("Invalid selection, please try again.");
+                Console.Write("Your selection:");
+                verifiedInput = Console.ReadLine().Trim();
+            }
+
+            var returnedType = types[verifiedInput];
+            return returnedType;
+        }
+
+        // Let's try some generics here
+        protected Dictionary<string, string> GetValuesInEnum<T>() where T : Enum
+        {
+            var values = Enum.GetNames(typeof(T));
+            var valuesWithKey = new Dictionary<string, string>();
+
+            for (int i = 0; i < values.Length; i++)
+            {
+                Console.WriteLine($"{i} - {values[i]}");
+                valuesWithKey.Add(i.ToString(), values[i]);
+            }
+
+            return valuesWithKey;
+        }
+
         
     }
 }
