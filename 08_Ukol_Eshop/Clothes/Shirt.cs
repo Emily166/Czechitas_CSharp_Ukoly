@@ -28,7 +28,7 @@ namespace _08_Ukol_Eshop.Clothes
         public Sizes Size;
         public bool LongSleeves;
         public bool HasHood;
-        public bool HasPockets;
+        //public bool HasPockets;
         public bool HasZip;
 
 
@@ -37,16 +37,17 @@ namespace _08_Ukol_Eshop.Clothes
         {
             Type = type;
             Size = size;
-            HasZip = false;
-            HasHood = false;
-            HasPockets = false;
+            //HasZip = false;
+            //HasHood = false;
+            //HasPockets = false;
         }
 
-        public Shirt(Upperwear type, Sizes size, Sex sex, Enums.Color color, double price, string brand, int quantityInStock, bool hasZip, bool hasHood, bool hasPockets) : this(type, size, sex, color, price, brand, quantityInStock)
+        public Shirt(Upperwear type, Sizes size, Sex sex, Enums.Color color, double price, string brand, int quantityInStock, bool hasLLongSleeves, bool hasZip, bool hasHood) : this(type, size, sex, color, price, brand, quantityInStock)
         {
+            LongSleeves = hasLLongSleeves;
             HasZip = hasZip;
             HasHood = hasHood;
-            HasPockets = hasPockets;
+            //HasPockets = hasPockets;
         }
 
     }

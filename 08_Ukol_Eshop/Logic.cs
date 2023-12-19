@@ -8,6 +8,7 @@ using System.Threading.Channels;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 using _08_Ukol_Eshop.Clothes;
+using _08_Ukol_Eshop.Enums;
 
 namespace _08_Ukol_Eshop
 {
@@ -265,7 +266,7 @@ namespace _08_Ukol_Eshop
             return inputID;
         }
 
-        // OTAZKA: Slo by v pripade metod SellItem() a StockUpItem() pouzit Generics a nahradit tak tyhle dve metody jednou univerzalni? 
+        // OTAZKA: Slo by v pripade metod SellItem() a StockUpItem() pouzit Generics a nahradit tak tyhle dve metody jednou univerzalni? Moje predpoved - ne.
         private string SellItem(string id, int amount)
         {
             // OTAZKA: je tu neco, co by mi vratilo jen objekt, ktery hledam do promenne itemToSell a mohla bych se tak vyhnout tvorbe listu?
@@ -333,32 +334,100 @@ namespace _08_Ukol_Eshop
         
         public void AddNewShirt()
         {
-            // POZN: toto dole by mi asi mohlo udeat bordel, kdyz bych mela u enums jinak definovane cislovani - VYRESIT!!!!
+            // POZN: dole by mi asi mohlo udeat bordel, kdyz bych mela u enums jinak definovane cislovani - VYRESIT!!!!
             //var typeOfShirt = Enum.GetNames(typeof(Upperwear));
             //for (int i = 0; i < typeOfShirt.Length; i++)
             //{
             //    Console.WriteLine($"{i} - {typeOfShirt[i]}");
             //}
 
-            Console.WriteLine("What type of shirt do you want to add? (select number)");
-            var typesOfShirt = GetValuesInEnum<Upperwear>();
+            List<Object> values = GetValuesForObjectCreation();
+            var shirtType = values[0].ToString();
+            var size = values[1].ToString();
+            var sex = values[2].ToString();
+            var color = values[3].ToString();
+            var prize = Int32.Parse(values[4].ToString());
             
-            Console.Write("Your selection:");
-            var inputShirt = Console.ReadLine().Trim();
-
-            var shirtType= UserInputCheck(typesOfShirt, inputShirt);
 
             Console.WriteLine(shirtType);
+            Console.WriteLine(size);
+            Console.WriteLine(sex);
+            Console.WriteLine(color);
+            Console.WriteLine(prize);
+        }
+
+        // Method that will get general values for a new object creation. This will be reused for Shirt and Trousers
+        protected List<Object> GetValuesForObjectCreation()
+        {
+            List<Object> values = new List<Object>();
+            
+            Console.WriteLine("What type of the cloth do you want to add? (select number)");
+            var typesOfShirt = GetValuesInEnum<Upperwear>();
+            Console.Write("Your selection:");
+            var inputShirt = Console.ReadLine().Trim();
+            var shirtType = UserInputCheck(typesOfShirt, inputShirt);
+            values.Add(shirtType);
+
+            Console.WriteLine("What size is the item?");
+            var typesOfSizes = GetValuesInEnum<Sizes>();
+            Console.Write("Your selection: ");
+            var inputSize = Console.ReadLine().Trim();
+            var size = UserInputCheck(typesOfSizes, inputSize);
+            values.Add(size);
+
+            Console.WriteLine("What sex is it for?");
+            var typesOfSex = GetValuesInEnum<Sex>();
+            Console.Write("Your selection: ");
+            var inputSex = Console.ReadLine().Trim();
+            var sex = UserInputCheck(typesOfSex, inputSex);
+            values.Add(sex);
+
+            Console.WriteLine("What color is the item?");
+            var typesOfColor = GetValuesInEnum<Color>();
+            Console.Write("Your selection: ");
+            var inputColor = Console.ReadLine().Trim();
+            var color = UserInputCheck(typesOfColor, inputColor);
+            values.Add(color);
+
+            Console.Write("What will be the price of the item?: ");
+            string prizeStr = Console.ReadLine().Trim();
+            int prize;
+            bool repeat = Int32.TryParse(prizeStr, out prize);
+            while (!repeat)
+            {
+                Console.Write("Wrong input, please try again: ");
+                prizeStr = Console.ReadLine();
+                repeat = Int32.TryParse(prizeStr, out prize);
+            }
+            values.Add(prize);
+
+            Console.Write("What brand is the item?: ");
+            var brand = Console.ReadLine().Trim();
+            values.Add(brand);
+
+            Console.WriteLine("How many pieces of the do you was to add?");
+            string countStr = Console.ReadLine().Trim();
+            int count;
+            bool repeat2 = Int32.TryParse(countStr, out count);
+            while (!repeat2)
+            {
+                Console.Write("Wrong input, please try again: ");
+                countStr = Console.ReadLine();
+                repeat2 = Int32.TryParse(countStr, out count);
+            }
+            values.Add(count);
+
+            return values;
         }
 
         protected string UserInputCheck(Dictionary<string, string> types, string userInput)
         {
             var verifiedInput = userInput;
             
-            while (!types.ContainsKey(userInput))
+            while (!types.ContainsKey(verifiedInput))
             {
                 Console.WriteLine("Invalid selection, please try again.");
-                Console.Write("Your selection:");
+                Console.Write("Your selection: ");
                 verifiedInput = Console.ReadLine().Trim();
             }
 
