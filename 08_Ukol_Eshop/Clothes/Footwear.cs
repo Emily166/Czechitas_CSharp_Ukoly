@@ -44,7 +44,7 @@ namespace _08_Ukol_Eshop.Clothes
 
         private bool IsValidSize(int size)
         {
-            return size > 34 && size < 49;
+            return size >= 34 && size <= 49;
         }
     }
 }
